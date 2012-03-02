@@ -38,7 +38,7 @@ class MongoEditor_Application
 
     public function initDB()
     {
-        $this->_db = MongoEditor_Db::get('easyui');
+        $this->_db = MongoEditor_Db::get('mongo-editor');
     }
 
     protected function __construct()

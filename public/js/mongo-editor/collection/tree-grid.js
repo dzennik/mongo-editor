@@ -12,7 +12,7 @@ MongoEditor.Collection.TreeGrid = new Class({
     Implements: [Options, Events],
 
     options: {
-        url: '/data.php?controller=collection&action=search&view=treeGrid&collection=users',
+        url: '/data.php?controller=collection&action=search&view=treeGrid&collection=test',
         fitColumns: true,
         columns: [[
             {title:'Key',   field:'key', width: 200},

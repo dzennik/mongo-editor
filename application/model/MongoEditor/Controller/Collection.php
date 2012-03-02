@@ -16,7 +16,7 @@ class MongoEditor_Controller_Collection extends MongoEditor_Property
         /**
          * @var MongoCollection $usersCollection
          */
-        $usersCollection = $db->users;
+        $usersCollection = $db->test;
 
         return $usersCollection->find();
     }
