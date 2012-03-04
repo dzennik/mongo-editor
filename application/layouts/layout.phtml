@@ -16,21 +16,31 @@
     <script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/mootools-1.2.4-base.js"></script>
    	<script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/Class.Mutators.jQuery.js"></script>
 
+    <script type="text/javascript" src="/js/mongo-editor/collection/property.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/collection/tree-grid.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/layout.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/app.js"></script>
 </head>
 <body class="easyui-layout mongo-editor" fit="true">
     <div id="data-region" region="center" title="DB">
-        <table id="data-region-tree-grid" class="easyui-treegrid"
+        <table id="data-region-tree-grid"
+               class="easyui-treegrid"
                border="false"
-               idField="id" treeField="key" fit="true">
+               idField="id"
+               treeField="key"
+               fit="true">
         </table>
     </div>
-    <div region="north" split="true" title="Search" style="height:100px;"></div>
-    <div region="east" split="true" title="Properties" style="width: 200px;">
-        <table id="tt" class="easyui-propertygrid" scrollbarSize="0" fitColumns="true" fit="true">
+    <div region="north" split="true" title="Search" style="height:100px;">
+    </div>
+    <div region="east" split="true" title="Properties" style="width: 400px;">
+        <table id="array-property-grid" class="easyui-propertygrid" scrollbarSize="0" fitColumns="true" toolbar="#toolbar" border="0">
+            <div id="array-property-toolbar">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="save()">Save</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="delete()">Delete</a>
+            </div>
         </table>
     </div>
+
 </body>
 </html>

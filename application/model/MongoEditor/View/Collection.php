@@ -26,7 +26,7 @@ class MongoEditor_View_Collection extends MongoEditor_Property
             $id = $parentId . '-' . $key;
 
             if (is_array($value)) {
-                $result[] = array(
+                $node = array(
                     'id'       => $id,
                     'key'      => $key,
                     'value'    => '',
@@ -34,12 +34,18 @@ class MongoEditor_View_Collection extends MongoEditor_Property
                     'state'    => 'closed'
                 );
             } else {
-                $result[] = array(
+                $node = array(
                     'id'    => $id,
                     'key'   => $key,
                     'value' => $value
                 );
             }
+
+            if ($parentId === 'col') {
+                $node['object'] = $value;
+            }
+
+            $result[] = $node;
         }
 
         return $result;
@@ -47,7 +53,7 @@ class MongoEditor_View_Collection extends MongoEditor_Property
 
     public function treeGridView()
     {
-        return $this->getChildren($this->_documents, 'col');
+        return array_merge($this->getChildren($this->_documents, 'col'));
     }
 
     public function __construct($documents)
