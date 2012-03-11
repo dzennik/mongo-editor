@@ -23,6 +23,14 @@ MongoEditor.Layout = new Class({
             );
         });
 
+        propertyGrid.addEvent('onAfterEdit', function(rowIndex, rowData, changes) {
+            treeGrid.container.treegrid('loadData', treeGrid.container.treegrid('getData'));
+        });
+
+        propertyGrid.addEvent('save', function() {
+            console.log('SAVE!');
+        });
+
         propertyGrid.addEvent('onGoToArray', function (rowIndex, rowData) {
             treeGrid.container.treegrid('unselectAll');
             treeGrid.container.treegrid('expand', rowData.parent.id);

@@ -11,7 +11,20 @@ jQuery.namespace('MongoEditor.Collection.Property');
 MongoEditor.Collection.Property = new Class({
     Implements: [Options, Events],
 
-    onDblClickRow: function (rowIndex, rowData) {
+    save: function() {
+        this.fireEvent('save');
+    },
+
+    onAfterEdit: function(rowIndex, rowData, changes) {
+        jQuery.each(changes, function (key, value) {
+            rowData.object[rowData.name] = value;
+            rowData.item.value = value;
+        });
+
+        this.fireEvent('onAfterEdit', [rowIndex, rowData, changes]);
+    },
+
+    onDblClickRow: function(rowIndex, rowData) {
         if (rowData.type) {
             switch (rowData.type) {
                 case 'array':
@@ -27,7 +40,10 @@ MongoEditor.Collection.Property = new Class({
         this.setOptions(options);
 
         this.container = jQuery(selector).propertygrid({
-            onDblClickRow: this.onDblClickRow.scope(this)
+            onDblClickRow: this.onDblClickRow.scope(this),
+            onAfterEdit: this.onAfterEdit.scope(this)
         });
+
+        this.container.parents('.panel-body').find('.toolbar .button.save').click(this.save.scope(this));
     }
 });

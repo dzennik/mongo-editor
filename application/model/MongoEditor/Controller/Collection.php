@@ -14,10 +14,10 @@ class MongoEditor_Controller_Collection extends MongoEditor_Property
         global $db;
 
         /**
-         * @var MongoCollection $usersCollection
+         * @var MongoCollection $booksCollection
          */
-        $usersCollection = $db->test;
+        $booksCollection = $db->books;
 
-        return $usersCollection->find();
+        return $booksCollection->find();
     }
 }

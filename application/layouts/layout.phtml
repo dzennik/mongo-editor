@@ -16,6 +16,8 @@
     <script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/mootools-1.2.4-base.js"></script>
    	<script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/Class.Mutators.jQuery.js"></script>
 
+    <script type="text/javascript" src="/js/mongo-editor/data/tree.js"></script>
+
     <script type="text/javascript" src="/js/mongo-editor/collection/property.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/collection/tree-grid.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/layout.js"></script>
@@ -32,12 +34,16 @@
         </table>
     </div>
     <div region="north" split="true" title="Search" style="height:100px;">
+        <div class="toolbar">
+            <a id="array-property-grid-button-save" href="#" class="easyui-linkbutton button save" iconCls="icon-add" plain="true">Save</a>
+            <a href="#" class="easyui-linkbutton button delete" iconCls="icon-edit" plain="true">Delete</a>
+        </div>
     </div>
     <div region="east" split="true" title="Properties" style="width: 400px;">
         <table id="array-property-grid" class="easyui-propertygrid" scrollbarSize="0" fitColumns="true" toolbar="#toolbar" border="0">
-            <div id="array-property-toolbar">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="save()">Save</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="delete()">Delete</a>
+            <div class="toolbar">
+                <a href="#" class="easyui-linkbutton button save" iconCls="icon-add" plain="true">Save</a>
+                <a href="#" class="easyui-linkbutton button delete" iconCls="icon-edit" plain="true">Delete</a>
             </div>
         </table>
     </div>
