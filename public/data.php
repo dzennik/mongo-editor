@@ -13,7 +13,7 @@ $controller = $_GET['controller'];
 $action     = $_GET['action'];
 $view       = $_GET['view'];
 
-$handler = new MongoEditor_Handler($controller, $action, $view);
+$handler = new MongoEditor_Handler($controller, $action, $_POST, $_GET);
 
 $data = $handler->execute();
 

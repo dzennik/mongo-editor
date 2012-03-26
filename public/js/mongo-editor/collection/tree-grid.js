@@ -13,6 +13,7 @@ MongoEditor.Collection.TreeGrid = new Class({
 
     data: null,
     object: null,
+    selectedRow: null,
 
     getObjectById: function (id) {
         var path = id.split('-');
@@ -34,6 +35,10 @@ MongoEditor.Collection.TreeGrid = new Class({
         return object;
     },
 
+    getRowById: function () {
+
+    },
+
     getPropertyData: function (selectedRow) {
         var rowData = [];
 
@@ -46,6 +51,7 @@ MongoEditor.Collection.TreeGrid = new Class({
                     "id": item.id,
                     "name": item.key,
                     "value": item.value,
+                    "type": 'value',
                     "editor": 'text'
                 };
 
@@ -57,12 +63,14 @@ MongoEditor.Collection.TreeGrid = new Class({
                 rowData.push(data);
             }.scope(this));
         } else {
+            //console.log(this.getObjectById(selectedRow.id));
             rowData.push({
                 "item": selectedRow,
                 "object": this.getObjectById(selectedRow.id),
                 "id": selectedRow.id,
                 "name": selectedRow.key,
                 "value": selectedRow.value,
+                "type": 'value',
                 "editor": 'text'
             });
         }
@@ -87,7 +95,8 @@ MongoEditor.Collection.TreeGrid = new Class({
             }
         }
 
-        this.object = this.getObject(selectedRow);
+        this.object      = this.getObject(selectedRow);
+        this.selectedRow = selectedRow;
 
         this.fireEvent('onClickRow', [selectedRow]);
     },
@@ -109,7 +118,7 @@ MongoEditor.Collection.TreeGrid = new Class({
 
     loader: function() {
         jQuery.ajax({
-            url: '/data.php?controller=collection&action=search&view=treeGrid&collection=test',
+            url: '/data.php?controller=collection&action=search',
             success: function(data) {
                 this.data = data;
 

@@ -7,17 +7,33 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class MongoEditor_Controller_Collection extends MongoEditor_Property
+class MongoEditor_Controller_Collection extends MongoEditor_Controller_Abstract
 {
     public function searchAction()
     {
         global $db;
 
         /**
-         * @var MongoCollection $booksCollection
-         */
+                 * @var MongoCollection $booksCollection
+                 */
         $booksCollection = $db->books;
 
-        return $booksCollection->find();
+        return MongoEditor_Helper_To::arr($booksCollection->find());
+    }
+
+    public function saveAction()
+    {
+        global $db;
+
+        /**
+                 * @var MongoCollection $booksCollection
+                 */
+        $booksCollection = $db->books;
+
+        $document = $this->_params['document'];
+
+        $document['_id'] = new MongoId($document['_id']['$id']);
+
+        $booksCollection->save($document);
     }
 }

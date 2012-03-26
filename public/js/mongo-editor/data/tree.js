@@ -20,7 +20,7 @@ MongoEditor.Data.Tree = new Class({
                 return;
             }
 
-            var id = parentId + '-' + key;
+            var id = MongoEditor.Data.Tree.getId(parentId, key);
 
             if (typeof value === 'object') {
                 var node = {
@@ -52,3 +52,7 @@ MongoEditor.Data.Tree = new Class({
         this.data = data;
     }
 });
+
+MongoEditor.Data.Tree.getId = function (parentId, key) {
+    return parentId + '-' + key;
+}

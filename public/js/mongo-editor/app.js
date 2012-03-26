@@ -18,3 +18,9 @@ MongoEditor.App = new Class({
 jQuery(function () {
     MongoEditor.Obj.app = new MongoEditor.App();
 });
+
+$(function(){
+    $(document).bind('contextmenu',function(e){
+        return false;
+    });
+});

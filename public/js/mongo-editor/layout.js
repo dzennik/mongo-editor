@@ -27,8 +27,32 @@ MongoEditor.Layout = new Class({
             treeGrid.container.treegrid('loadData', treeGrid.container.treegrid('getData'));
         });
 
-        propertyGrid.addEvent('save', function() {
-            console.log('SAVE!');
+        propertyGrid.addEvent('save', function () {
+            jQuery.ajax({
+                url: '/data.php?controller=collection&action=save',
+                type: 'POST',
+                data: {
+                    document: treeGrid.data[treeGrid.object._id['$id']]
+                },
+                success: function () {
+
+                },
+                dataType: 'json'
+            });
+        });
+
+        propertyGrid.addEvent('new', function (item) {
+            item.id = MongoEditor.Data.Tree.getId(treeGrid.selectedRow.id, item.key);
+
+            treeGrid.object[item.key] = item.value;
+
+            var treeData = new MongoEditor.Data.Tree(treeGrid.data);
+
+            var treeDataTransform = treeData.transform();
+
+            treeDataTransform = array_merge_recursive(treeDataTransform, treeGrid.container.treegrid('getData'));
+
+            treeGrid.container.treegrid('loadData', treeDataTransform);
         });
 
         propertyGrid.addEvent('onGoToArray', function (rowIndex, rowData) {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/styles/main.css">
 
     <script type="text/javascript" src="/js/function/scope.js"></script>
+    <script type="text/javascript" src="/js/function/array.js"></script>
    	<script type="text/javascript" src="/libs/jquery/easyui/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="/libs/jquery/namespace.js"></script>
    	<script type="text/javascript" src="/libs/jquery/easyui/jquery.easyui.min.js"></script>
@@ -19,6 +20,7 @@
     <script type="text/javascript" src="/js/mongo-editor/data/tree.js"></script>
 
     <script type="text/javascript" src="/js/mongo-editor/collection/property.js"></script>
+    <script type="text/javascript" src="/js/mongo-editor/collection/property/menu.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/collection/tree-grid.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/layout.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/app.js"></script>
@@ -34,19 +36,22 @@
         </table>
     </div>
     <div region="north" split="true" title="Search" style="height:100px;">
-        <div class="toolbar">
-            <a id="array-property-grid-button-save" href="#" class="easyui-linkbutton button save" iconCls="icon-add" plain="true">Save</a>
-            <a href="#" class="easyui-linkbutton button delete" iconCls="icon-edit" plain="true">Delete</a>
-        </div>
     </div>
     <div region="east" split="true" title="Properties" style="width: 400px;">
         <table id="array-property-grid" class="easyui-propertygrid" scrollbarSize="0" fitColumns="true" toolbar="#toolbar" border="0">
             <div class="toolbar">
-                <a href="#" class="easyui-linkbutton button save" iconCls="icon-add" plain="true">Save</a>
-                <a href="#" class="easyui-linkbutton button delete" iconCls="icon-edit" plain="true">Delete</a>
+                <a href="#" class="easyui-linkbutton button save" iconCls="icon-save" plain="true">Save</a>
+                <a href="#" class="easyui-linkbutton button new" iconCls="icon-add" plain="true">New</a>
+                <a href="#" class="easyui-linkbutton button new-array" iconCls="icon-add" plain="true">New Array</a>
             </div>
         </table>
     </div>
-
+    <div id="property-edit-menu" class="easyui-menu" style="width:120px;">
+        <div iconCls="icon-remove" rel="delete">Delete</div>
+    </div>
+    <div id="collection-edit-menu" class="easyui-menu" style="width:120px;">
+        <div iconCls="icon-delete">Delete</div>
+        <div iconCls="icon-save">New</div>
+    </div>
 </body>
 </html>

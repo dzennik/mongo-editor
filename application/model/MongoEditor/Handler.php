@@ -11,30 +11,25 @@ class MongoEditor_Handler extends MongoEditor_Property
 {
     protected $_controller;
     protected $_action;
-    protected $_view;
+    protected $_options;
+    protected $_params;
 
     public function execute()
     {
         $controllerClassName = 'MongoEditor_Controller_' . ucfirst($this->_controller);
         $actionFunction = $this->_action . 'Action';
-        $viewClassName = 'MongoEditor_View_' . ucfirst($this->_controller);
-        $viewFunction = $this->_view . 'View';
 
-        $controllerClass = new $controllerClassName();
+        $controllerClass = new $controllerClassName($this->_params, $this->_options);
 
-        $result = $controllerClass->{$actionFunction}();
-
-        $viewClass = new $viewClassName($result);
-
-        return $viewClass->$viewFunction();
+        return $controllerClass->{$actionFunction}();
     }
 
-    public function __construct($controller, $action, $view, $options = array())
+    public function __construct($controller, $action, $params, $options = array())
     {
         $this->setData(array(
             'controller' => $controller,
             'action'     => $action,
-            'view'       => $view,
+            'params'     => $params,
             'options'    => $options
         ));
     }
