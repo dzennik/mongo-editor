@@ -15,6 +15,10 @@ MongoEditor.Collection.Property = new Class({
         this.fireEvent('save');
     },
 
+    delete: function() {
+        this.fireEvent('delete', [this.menu.rowIndex, this.menu.rowData]);
+    },
+
     new: function() {
         var item = {
             key: 'wegweg',
@@ -78,17 +82,26 @@ MongoEditor.Collection.Property = new Class({
 
         this.menu = new MongoEditor.Collection.Property.Menu('#property-edit-menu');
 
-        this.menu.addEvent('delete', function(rowIndex, rowData) {
-            data = this.container.propertygrid('getData');
-            data.rows.removeByElement(rowData);
-
-            this.container.propertygrid('loadData', this.container.propertygrid('getData'));
-
-            this.fireEvent('onAfterEdit', [rowIndex, rowData]);
+        this.menu.addEvent('delete', function() {
+            this.delete();
         }.scope(this));
 
         this.container.parents('.panel-body').find('.toolbar .button.save').click(this.save.scope(this));
         this.container.parents('.panel-body').find('.toolbar .button.new').click(this.new.scope(this));
         this.container.parents('.panel-body').find('.toolbar .button.new-array').click(this.newArray.scope(this));
+    },
+
+    loadByTreeGrid: function(treeGrid) {
+        var rowData = treeGrid.getPropertyData(treeGrid.selectedRow);
+
+        this.reload(rowData);
+    },
+
+    reload: function(data) {
+        if (!data) {
+            data = this.container.propertygrid('getData');
+        }
+
+        this.container.propertygrid('loadData', data);
     }
 });

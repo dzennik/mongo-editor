@@ -34,6 +34,9 @@ class MongoEditor_Controller_Collection extends MongoEditor_Controller_Abstract
 
         $document['_id'] = new MongoId($document['_id']['$id']);
 
+        var_dump($document);
+        exit;
+
         $booksCollection->save($document);
     }
 }

@@ -16,11 +16,7 @@ MongoEditor.Layout = new Class({
         var propertyGrid = new MongoEditor.Collection.Property('#array-property-grid');
 
         treeGrid.addEvent('onClickRow', function (selectedRow) {
-            var rowData = treeGrid.getPropertyData(selectedRow);
-
-            propertyGrid.container.propertygrid('loadData',
-                {"rows": rowData}
-            );
+            propertyGrid.loadByTreeGrid(treeGrid);
         });
 
         propertyGrid.addEvent('onAfterEdit', function(rowIndex, rowData, changes) {
@@ -41,18 +37,32 @@ MongoEditor.Layout = new Class({
             });
         });
 
+        propertyGrid.addEvent('delete', function (rowIndex, rowData) {
+            //rowData.parent.children.removeByElement(rowData.item);
+
+            delete(treeGrid.object[item.key]);
+
+            //data = propertyGrid.container.propertygrid('getData');
+            //data.rows.removeByElement(rowData);
+
+            treeGrid.reload();
+
+            propertyGrid.loadByTreeGrid(treeGrid);
+        });
+
         propertyGrid.addEvent('new', function (item) {
-            item.id = MongoEditor.Data.Tree.getId(treeGrid.selectedRow.id, item.key);
+            //item.id = MongoEditor.Data.Tree.getId(treeGrid.selectedRow.id, item.key);
 
             treeGrid.object[item.key] = item.value;
 
-            var treeData = new MongoEditor.Data.Tree(treeGrid.data);
+            //var row = treeGrid.getRowById(treeGrid.selectedRow.id);
+            //row.push(item);
 
-            var treeDataTransform = treeData.transform();
+            // reload property drid
+            propertyGrid.loadByTreeGrid(treeGrid);
 
-            treeDataTransform = array_merge_recursive(treeDataTransform, treeGrid.container.treegrid('getData'));
-
-            treeGrid.container.treegrid('loadData', treeDataTransform);
+            // reload tree grid
+            treeGrid.reload();
         });
 
         propertyGrid.addEvent('onGoToArray', function (rowIndex, rowData) {

@@ -9,21 +9,16 @@
 MongoEditor.Collection.Property.Menu = new Class({
     Implements: [Options, Events],
 
-    rowIndex: null,
-    rowData: null,
-
     delete: function() {
-        this.rowData.parent.children.removeByElement(this.rowData.item);
-
-        this.fireEvent('delete', [this.rowIndex, this.rowData]);
+        this.fireEvent('delete');
     },
 
     new: function() {
-        this.fireEvent('new', [this.rowIndex, this.rowData]);
+        this.fireEvent('new');
     },
 
     newArray: function() {
-        this.fireEvent('newArray', [this.rowIndex, this.rowData]);
+        this.fireEvent('newArray');
     },
 
     onClick: function (item) {
