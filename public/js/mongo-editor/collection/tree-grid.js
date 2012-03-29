@@ -14,6 +14,33 @@ MongoEditor.Collection.TreeGrid = new Class({
     data: null,
     object: null,
     selectedRow: null,
+    treeData: null,
+
+    supportObject: function(id, object, treeData) {
+        jQuery(object).each(function (key, value) {
+            var item = null;
+
+            jQuery(treeData).each(function (k, i) {
+                if (key === k) {
+                    item = i;
+                }
+
+                if (!object[key]) {
+                    i.parent.children.removeByElement(i);
+                }
+            });
+
+            if (item) {
+                item.value = value;
+            } else {
+                i.parent.children.push({
+                    id: id,
+                    key: key,
+                    value: value
+                });
+            }
+        });
+    },
 
     getObjectById: function (id) {
         var path = id.split('-');
@@ -79,10 +106,16 @@ MongoEditor.Collection.TreeGrid = new Class({
     },
 
     getObject: function (row) {
+        var row = this.getParentRow(row);
+
+        return this.data[row.key];
+    },
+
+    getParentRow: function (row) {
         if (row._parentId) {
-            return this.getObject(this.container.treegrid('getParent', row.id));
+            return this.getParentRow(this.container.treegrid('getParent', row.id));
         } else {
-            return this.data[row.key];
+            return row;
         }
     },
 
@@ -124,9 +157,25 @@ MongoEditor.Collection.TreeGrid = new Class({
 
                 var treeData = new MongoEditor.Data.Tree(data);
 
-                this.container.treegrid('loadData', treeData.transform());
+                this.treeData = treeData.transform();
+
+                this.container.treegrid('loadData', this.treeData);
             }.scope(this),
             dataType: 'json'
         });
+    },
+
+    reload: function(data) {
+        if (!data) {
+            data = this.container.treegrid('getData');
+        }
+
+        var parentRow = this.getParentRow(this.selectedRow);
+
+        console.log(parentRow);
+
+        this.supportObject(parentRow.id, this.object, this.treeData);
+
+        this.container.treegrid('loadData', data);
     }
 });
