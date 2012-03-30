@@ -14,6 +14,29 @@ Array.prototype.removeByElement = function(el) {
     }
 }
 
+
+Array.each = function(arr, fun) {
+    if (jQuery.isArray(arr)) {
+        jQuery.each(arr, fun);
+    } else {
+        for (var key in arr) {
+            fun(key, arr[key]);
+        }
+    }
+};
+
+Array.deleteElement = function (arr, el) {
+    if (jQuery.isArray(arr)) {
+        arr.removeByElement(el);
+    } else {
+        for (var key in arr) {
+            if(arr[key] === el) {
+                delete(arr[key]);
+            }
+        }
+    }
+}
+
 //Array.prototype.merge = function(source) {
 //    jQuery.each(source, function (item) {
 //        if (typeof item === 'object') {

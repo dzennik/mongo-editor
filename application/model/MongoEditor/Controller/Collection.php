@@ -30,12 +30,9 @@ class MongoEditor_Controller_Collection extends MongoEditor_Controller_Abstract
                  */
         $booksCollection = $db->books;
 
-        $document = $this->_params['document'];
+        $document = json_decode($this->_params['document'], true);
 
         $document['_id'] = new MongoId($document['_id']['$id']);
-
-        var_dump($document);
-        exit;
 
         $booksCollection->save($document);
     }

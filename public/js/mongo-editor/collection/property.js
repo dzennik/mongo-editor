@@ -29,7 +29,11 @@ MongoEditor.Collection.Property = new Class({
     },
 
     newArray: function() {
-        this.fireEvent('newArray');
+        var item = {
+            key: 'newARRAY'
+        };
+
+        this.fireEvent('newArray', [item]);
     },
 
     onAfterEdit: function(rowIndex, rowData, changes) {

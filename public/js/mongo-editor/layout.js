@@ -28,7 +28,7 @@ MongoEditor.Layout = new Class({
                 url: '/data.php?controller=collection&action=save',
                 type: 'POST',
                 data: {
-                    document: treeGrid.data[treeGrid.object._id['$id']]
+                    document: jQuery.toJSON(treeGrid.data[treeGrid.object._id['$id']])
                 },
                 success: function () {
 
@@ -40,7 +40,9 @@ MongoEditor.Layout = new Class({
         propertyGrid.addEvent('delete', function (rowIndex, rowData) {
             //rowData.parent.children.removeByElement(rowData.item);
 
-            delete(treeGrid.object[item.key]);
+            var object = treeGrid.getObjectById(treeGrid.selectedRow.id);
+
+            Array.deleteElement(object, object[rowData.item.key]);
 
             //data = propertyGrid.container.propertygrid('getData');
             //data.rows.removeByElement(rowData);
@@ -53,16 +55,35 @@ MongoEditor.Layout = new Class({
         propertyGrid.addEvent('new', function (item) {
             //item.id = MongoEditor.Data.Tree.getId(treeGrid.selectedRow.id, item.key);
 
-            treeGrid.object[item.key] = item.value;
+            var object = treeGrid.getObjectById(treeGrid.selectedRow.id);
+
+            object[item.key] = item.value;
 
             //var row = treeGrid.getRowById(treeGrid.selectedRow.id);
             //row.push(item);
 
+            // reload tree grid
+            treeGrid.reload();
+
             // reload property drid
             propertyGrid.loadByTreeGrid(treeGrid);
+        });
+
+        propertyGrid.addEvent('newArray', function (item) {
+            var object = treeGrid.getObjectById(treeGrid.selectedRow.id);
+
+            if (jQuery.isArray(object)) {
+                object.push({});
+                console.log(object);
+            } else {
+                object[item.key] = {};
+            }
 
             // reload tree grid
             treeGrid.reload();
+
+            // reload property drid
+            propertyGrid.loadByTreeGrid(treeGrid);
         });
 
         propertyGrid.addEvent('onGoToArray', function (rowIndex, rowData) {

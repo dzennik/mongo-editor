@@ -17,29 +17,61 @@ MongoEditor.Collection.TreeGrid = new Class({
     treeData: null,
 
     supportObject: function(id, object, treeData) {
-        jQuery(object).each(function (key, value) {
+        Array.each(object, function (key, value) {
+            if (key === '_id') {
+                return;
+            }
+
             var item = null;
 
             jQuery(treeData).each(function (k, i) {
-                if (key === k) {
+                if (key == i.key) {
                     item = i;
                 }
 
-                if (!object[key]) {
-                    i.parent.children.removeByElement(i);
+                if (!object[i.key]) {
+                    treeData.removeByElement(i);
                 }
             });
 
+            var currentId = MongoEditor.Data.Tree.getId(id, key);
+
             if (item) {
+                if (typeof value === 'object') {
+                    if (item.children) {
+                        this.supportObject(currentId, value, item.children);
+
+                        if (Object.keys(value).length === 0) {
+                            item.children = [];
+                        }
+                    } else {
+                        item.children = [];
+                    }
+
+                    return;
+                }
+
                 item.value = value;
             } else {
-                i.parent.children.push({
-                    id: id,
+                var newItem = {
+                    id: currentId,
                     key: key,
                     value: value
-                });
+                };
+
+                if (typeof value === 'object') {
+                    newItem.children = [];
+                }
+
+                treeData.push(newItem);
             }
-        });
+        }.scope(this));
+
+        if (object['_id'] && Object.keys(object).length === 1) {
+            var parentRow = this.getParentRow(this.selectedRow);
+
+            parentRow.children = [];
+        }
     },
 
     getObjectById: function (id) {
@@ -119,12 +151,18 @@ MongoEditor.Collection.TreeGrid = new Class({
         }
     },
 
+    onDblClickRow: function (selectedRow) {
+        if (typeof selectedRow.children) {
+            if (selectedRow.state !== 'closed') {
+                this.container.treegrid('collapse', selectedRow.id);
+            }
+        }
+    },
+
     onClickRow: function (selectedRow) {
         if (typeof selectedRow.children) {
             if (selectedRow.state === 'closed') {
                 this.container.treegrid('expand', selectedRow.id);
-            } else {
-                this.container.treegrid('collapse', selectedRow.id);
             }
         }
 
@@ -143,7 +181,8 @@ MongoEditor.Collection.TreeGrid = new Class({
                 {title:'Key',   field:'key', width: 200},
                 {title:'Value', field:'value', width: 200}
             ]],
-            onClickRow   : this.onClickRow.scope(this)
+            onClickRow   : this.onClickRow.scope(this),
+            onDblClickRow: this.onDblClickRow.scope(this)
         });
 
         this.loader();
@@ -172,9 +211,7 @@ MongoEditor.Collection.TreeGrid = new Class({
 
         var parentRow = this.getParentRow(this.selectedRow);
 
-        console.log(parentRow);
-
-        this.supportObject(parentRow.id, this.object, this.treeData);
+        this.supportObject(parentRow.id, this.object, parentRow.children);
 
         this.container.treegrid('loadData', data);
     }
