@@ -18,11 +18,16 @@
     <script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/mootools-1.2.4-base.js"></script>
    	<script type="text/javascript" charset="utf-8" src="/libs/jquery/moo4q/Class.Mutators.jQuery.js"></script>
 
+    <script type="text/javascript" src="/js/mongo-editor/menu/abstract.js"></script>
+
     <script type="text/javascript" src="/js/mongo-editor/data/tree.js"></script>
 
     <script type="text/javascript" src="/js/mongo-editor/collection/property.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/collection/property/menu.js"></script>
+    <script type="text/javascript" src="/js/mongo-editor/collection/property/edit/dialog.js"></script>
+    <script type="text/javascript" src="/js/mongo-editor/collection/property/edit/simple-form.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/collection/tree-grid.js"></script>
+    <script type="text/javascript" src="/js/mongo-editor/collection/tree-grid/menu.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/layout.js"></script>
     <script type="text/javascript" src="/js/mongo-editor/app.js"></script>
 </head>
@@ -48,11 +53,40 @@
         </table>
     </div>
     <div id="property-edit-menu" class="easyui-menu" style="width:120px;">
+        <div iconCls="icon-edit" rel="edit">Edit</div>
         <div iconCls="icon-remove" rel="delete">Delete</div>
+
     </div>
     <div id="collection-edit-menu" class="easyui-menu" style="width:120px;">
-        <div iconCls="icon-delete">Delete</div>
-        <div iconCls="icon-save">New</div>
+        <div iconCls="icon-remove" rel="delete">Delete</div>
+        <div iconCls="icon-add" rel="new">New</div>
+        <div iconCls="icon-add" rel="newArray">New Array</div>
+    </div>
+
+    <div id="edit-property-dialog" class="easyui-dialog"
+         style="width:400px; height:280px;"  title="Edit Property"
+         closed="true" buttons="#edit-property-dialog-buttons">
+        <div class="ftitle">Property:</div>
+        <form class="simple-form" method="post">
+            <div class="fitem">
+                <label>Name:</label>
+                <input name="name" class="easyui-validatebox" required="true">
+            </div>
+            <div class="fitem">
+                <label>Value:</label>
+                <input name="value" class="easyui-validatebox" required="true">
+            </div>
+        </form>
+        <form class="key-form" method="post">
+            <div class="fitem">
+                <label>Key:</label>
+                <input name="name" class="easyui-validatebox" required="true">
+            </div>
+        </form>
+    </div>
+    <div id="edit-property-dialog-buttons">
+        <a href="#" class="easyui-linkbutton set" iconCls="icon-ok">Set</a>
+        <a href="#" class="easyui-linkbutton cancel" iconCls="icon-cancel" onclick="javascript:$('#edit-property-dialog').dialog('close')">Cancel</a>
     </div>
 </body>
 </html>

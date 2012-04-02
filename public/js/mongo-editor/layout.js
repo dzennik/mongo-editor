@@ -15,6 +15,47 @@ MongoEditor.Layout = new Class({
 
         var propertyGrid = new MongoEditor.Collection.Property('#array-property-grid');
 
+        treeGrid.addEvent('delete', function (row) {
+            if (!row._parentId) {
+                jQuery.messager.confirm('Confirm', 'Are you sure you want to delete document?', function (choose) {
+                    if (choose) {
+                        jQuery.ajax({
+                            url: '/data.php?controller=collection&action=delete',
+                            type: 'POST',
+                            data: {
+                                id: row.key
+                            },
+                            success: function (result) {
+                                if (result.success) {
+                                    jQuery.messager.alert('Warning', 'The document was deleted!');
+                                }
+                            },
+                            dataType: 'json'
+                        });
+                    }
+                });
+            } else {
+                var object = treeGrid.getObjectById(row._parentId);
+
+                Array.deleteElement(object, object[row.key]);
+
+                treeGrid.updateRow(row);
+
+                treeGrid.reload();
+            }
+        });
+
+        treeGrid.addEvent('new', function (row) {
+            var object = treeGrid.getObjectById(row._parentId);
+
+            object[item.key] = item.value;
+
+            treeGrid.updateRow(row);
+
+            // reload tree grid
+            treeGrid.reload();
+        });
+
         treeGrid.addEvent('onClickRow', function (selectedRow) {
             propertyGrid.loadByTreeGrid(treeGrid);
         });
@@ -30,22 +71,23 @@ MongoEditor.Layout = new Class({
                 data: {
                     document: jQuery.toJSON(treeGrid.data[treeGrid.object._id['$id']])
                 },
-                success: function () {
-
+                success: function (result) {
+                    if (result.success) {
+                        jQuery.messager.alert('Warning', 'The document was saved!');
+                    }
                 },
                 dataType: 'json'
             });
         });
 
-        propertyGrid.addEvent('delete', function (rowIndex, rowData) {
-            //rowData.parent.children.removeByElement(rowData.item);
-
+        propertyGrid.addEvent('delete', function (row) {
             var object = treeGrid.getObjectById(treeGrid.selectedRow.id);
 
-            Array.deleteElement(object, object[rowData.item.key]);
+            console.log(treeGrid.selectedRow.id, row.item.key);
 
-            //data = propertyGrid.container.propertygrid('getData');
-            //data.rows.removeByElement(rowData);
+            Array.deleteElement(object, object[row.item.key]);
+
+            treeGrid.updateRow(treeGrid.selectedRow);
 
             treeGrid.reload();
 
@@ -53,14 +95,11 @@ MongoEditor.Layout = new Class({
         });
 
         propertyGrid.addEvent('new', function (item) {
-            //item.id = MongoEditor.Data.Tree.getId(treeGrid.selectedRow.id, item.key);
-
             var object = treeGrid.getObjectById(treeGrid.selectedRow.id);
 
             object[item.key] = item.value;
 
-            //var row = treeGrid.getRowById(treeGrid.selectedRow.id);
-            //row.push(item);
+            treeGrid.updateRow(treeGrid.selectedRow);
 
             // reload tree grid
             treeGrid.reload();
@@ -74,10 +113,11 @@ MongoEditor.Layout = new Class({
 
             if (jQuery.isArray(object)) {
                 object.push({});
-                console.log(object);
             } else {
                 object[item.key] = {};
             }
+
+            treeGrid.updateRow(treeGrid.selectedRow);
 
             // reload tree grid
             treeGrid.reload();

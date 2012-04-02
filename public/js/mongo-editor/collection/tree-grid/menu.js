@@ -1,19 +1,23 @@
 /**
  * Created by JetBrains PhpStorm.
  * User: kulitskyd
- * Date: 25.03.12
- * Time: 15:01
+ * Date: 31.03.12
+ * Time: 19:10
  * To change this template use File | Settings | File Templates.
  */
 
-MongoEditor.Collection.Property.Menu = new Class({
+MongoEditor.Collection.TreeGrid.Menu = new Class({
     Implements: [Options, Events, MongoEditor.Collection.Menu.Abstract],
 
     delete: function() {
         this.fireEvent('delete');
     },
 
-    edit: function() {
-        this.fireEvent('edit');
+    new: function() {
+        this.fireEvent('new');
+    },
+
+    newArray: function() {
+        this.fireEvent('newArray');
     }
 });

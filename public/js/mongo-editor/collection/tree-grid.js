@@ -66,12 +66,6 @@ MongoEditor.Collection.TreeGrid = new Class({
                 treeData.push(newItem);
             }
         }.scope(this));
-
-        if (object['_id'] && Object.keys(object).length === 1) {
-            var parentRow = this.getParentRow(this.selectedRow);
-
-            parentRow.children = [];
-        }
     },
 
     getObjectById: function (id) {
@@ -94,8 +88,17 @@ MongoEditor.Collection.TreeGrid = new Class({
         return object;
     },
 
-    getRowById: function () {
+    new: function (row) {
+        var item = {
+            key: 'TEST RECORD',
+            value: 13515
+        };
 
+        this.fireEvent('new', [row, item]);
+    },
+
+    delete: function (row) {
+        this.fireEvent('delete', [row]);
     },
 
     getPropertyData: function (selectedRow) {
@@ -175,6 +178,20 @@ MongoEditor.Collection.TreeGrid = new Class({
     initialize: function(selector, options){
         this.setOptions(options);
 
+        this.menu = new MongoEditor.Collection.TreeGrid.Menu('#collection-edit-menu');
+
+        this.menu.addEvent('new', function () {
+            this.menu.rowData = this.menu.selected[1]; // rowData from onRowContextMenu event of container
+
+            this.new(this.menu.rowData);
+        });
+
+        this.menu.addEvent('delete', function () {
+            this.menu.rowData = this.menu.selected[1]; // rowData from onRowContextMenu event of container
+
+            this.delete(this.menu.rowData);
+        }.scope(this));
+
         this.container = jQuery(selector).treegrid({
             fitColumns: true,
             columns: [[
@@ -182,7 +199,8 @@ MongoEditor.Collection.TreeGrid = new Class({
                 {title:'Value', field:'value', width: 200}
             ]],
             onClickRow   : this.onClickRow.scope(this),
-            onDblClickRow: this.onDblClickRow.scope(this)
+            onDblClickRow: this.onDblClickRow.scope(this),
+            onContextMenu: this.menu.onContextMenuHandler.scope(this.menu)
         });
 
         this.loader();
@@ -209,10 +227,19 @@ MongoEditor.Collection.TreeGrid = new Class({
             data = this.container.treegrid('getData');
         }
 
-        var parentRow = this.getParentRow(this.selectedRow);
-
-        this.supportObject(parentRow.id, this.object, parentRow.children);
-
         this.container.treegrid('loadData', data);
+    },
+
+    updateRow: function (row) {
+        var parentRow = this.getParentRow(row);
+        var object    = this.getObject(row);
+
+        this.supportObject(parentRow.id, object, parentRow.children);
+
+        if (object['_id'] && Object.keys(object).length === 1) {
+            var rowData = this.getParentRow(row);
+
+            parentRow.children = [];
+        }
     }
 });

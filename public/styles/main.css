@@ -12,10 +12,11 @@
     height: 100%;
 }
 
-#fm{
+.easyui-dialog {
 	margin:0;
-	padding:10px 30px;
+	padding:10px 15px;
 }
+
 .ftitle{
 	font-size:14px;
 	font-weight:bold;
@@ -24,9 +25,11 @@
 	margin-bottom:10px;
 	border-bottom:1px solid #ccc;
 }
+
 .fitem{
 	margin-bottom:5px;
 }
+
 .fitem label{
 	display:inline-block;
 	width:80px;

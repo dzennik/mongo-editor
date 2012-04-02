@@ -35,5 +35,21 @@ class MongoEditor_Controller_Collection extends MongoEditor_Controller_Abstract
         $document['_id'] = new MongoId($document['_id']['$id']);
 
         $booksCollection->save($document);
+
+        return array('success' => true);
+    }
+
+    public function deleteAction()
+    {
+        global $db;
+
+        /**
+                 * @var MongoCollection $booksCollection
+                 */
+        $booksCollection = $db->books;
+
+        $booksCollection->remove(array('_id' => new MongoId($this->_params['id'])));
+
+        return array('success' => true);
     }
 }

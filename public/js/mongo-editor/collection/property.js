@@ -15,13 +15,42 @@ MongoEditor.Collection.Property = new Class({
         this.fireEvent('save');
     },
 
-    delete: function() {
-        this.fireEvent('delete', [this.menu.rowIndex, this.menu.rowData]);
+    set: function(formData) {
+        console.log(formData.row.item);
+
+        formData.row.item.key   = formData.name;
+        formData.row.item.value = formData.value;
+
+        formData.row.name  = formData.name;
+        formData.row.value = formData.value;
+
+        formData.row.object[formData.name] = formData.value;
+
+        this.fireEvent('onAfterEdit', [0, formData, formData]);
+
+        this.reload();
+    },
+
+    edit: function(row) {
+        var formData = {
+            row  : row,
+            name : row.name,
+            value: row.value,
+            type : row.type
+        };
+
+        this.editDialog.open(formData);
+
+        this.fireEvent('edit');
+    },
+
+    delete: function(row) {
+        this.fireEvent('delete', [row]);
     },
 
     new: function() {
         var item = {
-            key: 'wegweg',
+            key: 'TEST RECORD',
             value: 13515
         };
 
@@ -53,18 +82,6 @@ MongoEditor.Collection.Property = new Class({
         }
     },
 
-    onRowContextMenu: function(e, rowIndex, rowData) {
-        this.menu.container.menu('show', {
-            left: e.pageX,
-            top: e.pageY
-        });
-
-        this.menu.rowIndex = rowIndex;
-        this.menu.rowData  = rowData;
-
-        return false;
-    },
-
     onDblClickRow: function(rowIndex, rowData) {
         switch (rowData.type) {
             case 'array':
@@ -78,21 +95,35 @@ MongoEditor.Collection.Property = new Class({
     initialize: function(selector, options) {
         this.setOptions(options);
 
+        this.menu = new MongoEditor.Collection.Property.Menu('#property-edit-menu');
+
+        this.menu.addEvent('edit', function () {
+            this.menu.rowIndex = this.menu.selected[1]; // rowIndex from onRowContextMenu event of container
+            this.menu.rowData  = this.menu.selected[2]; // rowData from onRowContextMenu event of container
+
+            this.edit(this.menu.rowData);
+        }.scope(this));
+
+        this.menu.addEvent('delete', function () {
+            this.menu.rowIndex = this.menu.selected[1]; // rowIndex from onRowContextMenu event of container
+            this.menu.rowData  = this.menu.selected[2]; // rowData from onRowContextMenu event of container
+
+            this.delete(this.menu.rowData);
+        }.scope(this));
+
         this.container = jQuery(selector).propertygrid({
-            onRowContextMenu: this.onRowContextMenu.scope(this),
+            onRowContextMenu: this.menu.onContextMenuHandler.scope(this.menu),
             onDblClickRow   : this.onDblClickRow.scope(this),
             onAfterEdit     : this.onAfterEdit.scope(this)
         });
 
-        this.menu = new MongoEditor.Collection.Property.Menu('#property-edit-menu');
-
-        this.menu.addEvent('delete', function() {
-            this.delete();
-        }.scope(this));
-
         this.container.parents('.panel-body').find('.toolbar .button.save').click(this.save.scope(this));
         this.container.parents('.panel-body').find('.toolbar .button.new').click(this.new.scope(this));
         this.container.parents('.panel-body').find('.toolbar .button.new-array').click(this.newArray.scope(this));
+
+        this.editDialog = new MongoEditor.Collection.Property.Edit.Dialog('#edit-property-dialog');
+
+        this.editDialog.addEvent('set', this.set.scope(this));
     },
 
     loadByTreeGrid: function(treeGrid) {
