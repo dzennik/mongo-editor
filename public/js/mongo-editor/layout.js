@@ -15,6 +15,8 @@ MongoEditor.Layout = new Class({
 
         var propertyGrid = new MongoEditor.Collection.Property('#array-property-grid');
 
+        var objectSelectorTree = new MongoEditor.Object.Tree('#object-selector-tree');
+
         treeGrid.addEvent('delete', function (row) {
             if (!row._parentId) {
                 jQuery.messager.confirm('Confirm', 'Are you sure you want to delete document?', function (choose) {

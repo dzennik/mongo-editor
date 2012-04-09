@@ -34,7 +34,7 @@ MongoEditor.Collection.TreeGrid = new Class({
                 }
             });
 
-            var currentId = MongoEditor.Data.Tree.getId(id, key);
+            var currentId = MongoEditor.Data.TreeGrid.getId(id, key);
 
             if (item) {
                 if (typeof value === 'object') {
@@ -212,7 +212,7 @@ MongoEditor.Collection.TreeGrid = new Class({
             success: function(data) {
                 this.data = data;
 
-                var treeData = new MongoEditor.Data.Tree(data);
+                var treeData = new MongoEditor.Data.TreeGrid(data);
 
                 this.treeData = treeData.transform();
 

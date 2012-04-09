@@ -1,14 +1,14 @@
 /**
  * Created by JetBrains PhpStorm.
- * User: kulitskyd
- * Date: 09.04.12
- * Time: 22:34
+ * User: dkulitsky
+ * Date: 11.03.12
+ * Time: 15:48
  * To change this template use File | Settings | File Templates.
  */
 
-jQuery.namespace('MongoEditor.Data.Tree');
+jQuery.namespace('MongoEditor.Data.TreeGrid');
 
-MongoEditor.Data.Tree = new Class({
+MongoEditor.Data.TreeGrid = new Class({
     data: null,
     transformData: null,
 
@@ -16,20 +16,25 @@ MongoEditor.Data.Tree = new Class({
         var result = [];
 
         jQuery.each(array, function (key, value) {
-            var id = MongoEditor.Data.Tree.getId(parentId, key);
+            if (key === '_id') {
+                return;
+            }
+
+            var id = MongoEditor.Data.TreeGrid.getId(parentId, key);
 
             if (typeof value === 'object') {
                 var node = {
                     'id'       : id,
-                    'text'     : key === 0 ? '0' : key,
+                    'key'      : key === 0 ? '0' : key,
+                    'value'    : '',
                     'children' : this.getChildren(value, id),
                     'state'    : 'closed'
                 }
             } else {
                 var node = {
                     'id'    : id,
-                    'text'  : value,
-                    'state' : 'open'
+                    'key'   : key,
+                    'value' : value
                 }
             }
 
@@ -40,7 +45,7 @@ MongoEditor.Data.Tree = new Class({
     },
 
     transform: function() {
-        return this.transformData = this.getChildren(this.data, 'tree');
+        return this.transformData = this.getChildren(this.data, 'col');
     },
 
     initialize: function(data) {
@@ -48,6 +53,6 @@ MongoEditor.Data.Tree = new Class({
     }
 });
 
-MongoEditor.Data.Tree.getId = function (parentId, key) {
+MongoEditor.Data.TreeGrid.getId = function (parentId, key) {
     return parentId + '-' + key;
 }
